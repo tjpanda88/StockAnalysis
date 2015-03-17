@@ -1,0 +1,30 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:batch="http://www.springframework.org/schema/batch" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch
+http://www.springframework.org/schema/batch/spring-batch-3.0.xsd
+http://www.springframework.org/schema/beans 
+http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+	<bean id="stockListReader" class="com.tjpanda88.stock.analysis.batch.item.HttpItemReader">
+		<property name="lineMapper">
+			<bean class="com.tjpanda88.stock.analysis.batch.item.file.StockListFieldSetMapper">
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="itemWriter" class="org.springframework.batch.item.database.JpaItemWriter">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+
+	<batch:job id="myJob" restartable="true" incrementer="incrementer">
+		<batch:step id="s11">
+			<tasklet>
+				<chunk reader="stockListReader" writer="itemWriter" commit-interval="10" />
+			</tasklet>
+		</batch:step>
+	</batch:job>
+
+	<bean id="incrementer"
+		class="org.springframework.batch.core.launch.support.RunIdIncrementer" />
+</beans>
+
