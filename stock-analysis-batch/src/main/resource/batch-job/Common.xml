@@ -1,0 +1,22 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:batch="http://www.springframework.org/schema/batch" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch
+http://www.springframework.org/schema/batch/spring-batch-3.0.xsd
+http://www.springframework.org/schema/beans 
+http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+	<batch:job id="baseJob" abstract="true">
+		<batch:listeners>
+			<batch:listener ref="createDropJobFolderListener" />
+		</batch:listeners>
+	</batch:job>
+
+	<bean id="incrementer"
+		class="org.springframework.batch.core.launch.support.RunIdIncrementer" />
+
+	<bean id="createDropJobFolderListener"
+		class="com.tjpanda88.stock.analysis.batch.listener.CreateDropJobFolderListener">
+		<property name="baseDirectory" value="${stock.analysis.basepath}" />
+	</bean>
+</beans>
+

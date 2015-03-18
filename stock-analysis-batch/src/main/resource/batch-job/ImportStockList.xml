@@ -21,15 +21,12 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
 
-	<batch:job id="myJob" restartable="true" incrementer="incrementer">
+	<batch:job id="myJob" restartable="true" incrementer="incrementer" parent="baseJob">
 		<batch:step id="s11">
 			<tasklet>
 				<chunk reader="stockListReader" writer="itemWriter" commit-interval="10" />
 			</tasklet>
 		</batch:step>
 	</batch:job>
-
-	<bean id="incrementer"
-		class="org.springframework.batch.core.launch.support.RunIdIncrementer" />
 </beans>
 
