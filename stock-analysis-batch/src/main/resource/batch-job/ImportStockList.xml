@@ -6,6 +6,11 @@ http://www.springframework.org/schema/beans
 http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
 	<bean id="stockListReader" class="com.tjpanda88.stock.analysis.batch.item.HttpItemReader">
+	    <property name="inputList">
+			<list>
+				<value>${stocklist.url.1}</value>
+			</list>
+		</property>
 		<property name="lineMapper">
 			<bean class="com.tjpanda88.stock.analysis.batch.item.file.StockListFieldSetMapper">
 			</bean>
