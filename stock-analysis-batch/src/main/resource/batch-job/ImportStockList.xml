@@ -17,14 +17,14 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 		</property>
 	</bean>
 
-	<bean id="itemWriter" class="org.springframework.batch.item.database.JpaItemWriter">
+	<bean id="stockListWriter" class="org.springframework.batch.item.database.JpaItemWriter">
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
 
-	<batch:job id="myJob" restartable="true" incrementer="incrementer" parent="baseJob">
-		<batch:step id="s11">
+	<batch:job id="importStockList" restartable="true" incrementer="incrementer" parent="baseJob">
+		<batch:step id="importStockStep">
 			<tasklet>
-				<chunk reader="stockListReader" writer="itemWriter" commit-interval="10" />
+				<chunk reader="stockListReader" writer="stockListWriter" commit-interval="10" />
 			</tasklet>
 		</batch:step>
 	</batch:job>
