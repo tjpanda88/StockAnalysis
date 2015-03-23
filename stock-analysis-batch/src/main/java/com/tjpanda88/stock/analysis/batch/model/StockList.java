@@ -17,7 +17,7 @@ public class StockList implements Serializable {
 	@Column(nullable = false, name = "STOCK_CODE", length = 6)
 	private String code;
 	
-	@Column(nullable = false, name = "STOCK_TYPE", length = 1)
+	@Column(nullable = false, name = "STOCK_TYPE", length = 2)
 	private String type;
 
 	@Column(nullable = false, name = "STOCK_NAME", length = 30)

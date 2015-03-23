@@ -13,11 +13,7 @@ public class StockListFieldSetMapper implements JsonMaper<StockList> {
 		
 		stockListItem.setCode(jsonObject.getString("code"));
 		stockListItem.setName(jsonObject.getString("name"));
-		if(StringUtils.startsWith(jsonObject.getString("symbol"), "sz")) {
-			stockListItem.setType("S");
-		} else {
-			stockListItem.setType("H");
-		}
+		stockListItem.setType(StringUtils.left(jsonObject.getString("symbol"), 2));
 		
 		return stockListItem;
 	}
