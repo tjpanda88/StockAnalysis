@@ -6,15 +6,36 @@ http://www.springframework.org/schema/beans
 http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
 	<bean id="fileDownloadTasklet"
-		class="com.tjpanda88.stock.analysis.batch.tasklet.FileDownloadTasklet">
+		class="com.tjpanda88.stock.analysis.batch.tasklet.StockDetailFileDownloadTasklet">
 		<property name="url" value="${stockhistory.url.1}" />
 	</bean>
 
 	<batch:job id="importStockHistoryData" restartable="true"
 		incrementer="incrementer" parent="baseJob">
-		<batch:step id="fileDownloadStep">
-			<batch:tasklet ref="fileDownloadTasklet"/>
+		<batch:step id="fileDownloadStep" next="listSizeCheckDecider">
+			<batch:tasklet ref="fileDownloadTasklet" />
+			<batch:listeners>
+				<batch:listener ref="jdbcPartitionStepListener" />
+			</batch:listeners>
 		</batch:step>
+		<batch:decision id="listSizeCheckDecider" decider="listSizeCheckDecider">
+			<batch:next on="CONTINUE" to="fileDownloadStep" />
+			<batch:end on="COMPLETED" />
+		</batch:decision>
 	</batch:job>
+
+	<bean id="jdbcPartitionStepListener"
+		class="com.tjpanda88.stock.analysis.batch.listener.JdbcPartitionStepListener">
+		<property name="dataSource" ref="dataSource" />
+		<property name="sql"
+			value="SELECT STOCK_CODE, STOCK_TYPE FROM STOCK_LIST" />
+		<property name="partitionListKey" value="stock.partition.list" />
+		<property name="partitionItemKey" value="stock.partition.item" />
+	</bean>
+
+	<bean id="listSizeCheckDecider"
+		class="com.tjpanda88.stock.analysis.batch.decider.ListSizeCheckDecider">
+		<property name="partitionListKey" value="stock.partition.list" />
+	</bean>
 </beans>
 

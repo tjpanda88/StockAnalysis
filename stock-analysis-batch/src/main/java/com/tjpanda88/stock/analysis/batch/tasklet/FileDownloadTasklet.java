@@ -22,17 +22,17 @@ public class FileDownloadTasklet implements Tasklet {
 	public RepeatStatus execute(StepContribution contribution,
 			ChunkContext chunkContext) throws Exception {
 		String baseDirectory = (String)chunkContext.getStepContext().getJobExecutionContext().get("job.temp.directory");
-		String responseBody = HttpUtils.getResponseByUtil(url);
+		String responseBody = HttpUtils.getResponseByUtil(getUrl(chunkContext));
 		
 		String downloadFile = FilenameUtils.concat(baseDirectory, RandomStringUtils.randomAlphanumeric(64));
 		FileUtils.writeStringToFile(new File(downloadFile), responseBody);
 		return RepeatStatus.FINISHED;
 	}
 
-	public String getUrl() {
+	public String getUrl(ChunkContext chunkContext) {
 		return url;
 	}
-
+	
 	public void setUrl(String url) {
 		this.url = url;
 	}
